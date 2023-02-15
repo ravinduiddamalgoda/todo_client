@@ -36,6 +36,7 @@ import { AuthContext } from "../components/AuthProvider";
 import { blue } from "@mui/material/colors";
 import Stack from "@mui/system/Stack";
 import { styled } from "@mui/styles";
+import clsx from "clsx";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "dark" ? "#1A2027" : "#fff",
@@ -67,7 +68,6 @@ const useStyles = makeStyles()((theme) => ({
     margin: "5% auto",
    
   },
-
   h1_wellcome: {
     fontSize: "20px",
     color: "white",
@@ -78,19 +78,13 @@ const useStyles = makeStyles()((theme) => ({
     textAlign: "center",
   },
   li_style: {
-   
     listStyleType : "none",
     color : "white",
-   
-    
   },
-
   button_col :{
     color:"white",
     alignContent:"flex-end",
     alignItems:"end",
-    
-   
   },
   box_style:{
     background: 'linear-gradient(45deg, #2193b0 30%, #6dd5ed 90%)',
@@ -99,15 +93,15 @@ const useStyles = makeStyles()((theme) => ({
     padding: "1%",
     marginTop: "2%",  
   },
-
   li_text:{
     paddingRight: "50%"
   },
-
+  li_text_done: {
+    textDecoration: 'line-through',
+  },
   button_at:{
     color:"black"
   }
-
 }));
 
 function TodoInput(props: { onNewTodoCreated: (todo: Todo) => void }) {
@@ -223,21 +217,21 @@ export function ProfilePage() {
   }, []);
 
   function Del_todo (tad : String , client:any){
-   // const {client}  = useContext(AuthContext);
-   // const { enqueueSnackbar } = useSnackbar();
-    
     const path_val = "todo/" + tad;
-    // console.log(path_val);
-    
     async function Delete_val () {
       try{
           if(client){
-            const res =  await client.delete(path_val)
-            enqueueSnackbar("Sucessfully Deleated", { variant: "success" });
-            window.location.reload();
-          }
+            console.log('delted Item id', tad);
+            console.log('all todos', todos);
           
-        
+            const res =  await client.delete(path_val)
+
+            const todosCpy = [...todos];
+            const filteredTodos = todosCpy.filter(item => item._id !== tad);
+            setTodos(filteredTodos);
+
+            enqueueSnackbar("Sucessfully Deleated", { variant: "success" });
+          }
       }
       catch(err){
         enqueueSnackbar("Something went wrong", { variant: "error" });
@@ -320,7 +314,7 @@ export function ProfilePage() {
             
             <Box className = {styles.classes.box_style}>
               <li key={todo._id} className = {styles.classes.li_style}>
-              <Typography className={styles.classes.li_text} display="inline"> {todo.title} </Typography>
+              <Typography className={clsx(styles.classes.li_text, todo.status === 'done' && styles.classes.li_text_done)} display="inline"> {todo.title}</Typography>
               <Button className={styles.classes.button_col} onClick={() => { Del_todo(todo._id , client) }}> <Typography display="inline">Delete</Typography></Button>
               <Button className={styles.classes.button_col} onClick={() => { edit_todo(todo._id , client) }}><Typography className={styles.classes.button_at} display="inline">Done</Typography></Button>
             </li>
