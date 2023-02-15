@@ -57,24 +57,24 @@ export function LoginPage() {
 
   let { init } = useContext(AuthContext);
 
-  const saveToken = async (payload: {token: string, life: number}) => {
+  const saveToken = async (payload: { token: string; life: number }) => {
     await localStorage.setItem('token', JSON.stringify(payload));
-  }
+  };
 
   const makeRegistration = async (formData: any) => {
     try {
       const res = await axios.post('http://localhost:5000/login', {
-        ...formData
+        ...formData,
       });
       await saveToken(res.data);
       enqueueSnackbar('Succesfully Logged In', { variant: 'success' });
-      init && await init();
+      init && (await init());
       navigate('../app');
-    } catch(err: any) {
+    } catch (err: any) {
       const error = err?.response?.data?.err || err.message;
-      enqueueSnackbar(error, { variant: 'error' })
+      enqueueSnackbar(error, { variant: 'error' });
     }
-  }
+  };
 
   return (
     <Box className={classes.root}>
@@ -92,7 +92,7 @@ export function LoginPage() {
         {({ values, errors, handleChange, handleSubmit }) => {
           return (
             <>
-              <Typography variant='h3'>Login</Typography>
+              <Typography variant="h3">Login</Typography>
               <FormControl className={classes.formControl}>
                 <TextField
                   value={values.email}
@@ -103,7 +103,9 @@ export function LoginPage() {
                   size="small"
                   error={errors.email && errors.email?.length ? true : false}
                 />
-                <FormHelperText style={{ color: 'red' }}>{errors.email}</FormHelperText>
+                <FormHelperText style={{ color: 'red' }}>
+                  {errors.email}
+                </FormHelperText>
               </FormControl>
               <FormControl className={classes.formControl}>
                 <TextField
@@ -124,7 +126,7 @@ export function LoginPage() {
                 Login
               </Button>
               <Box height={10} />
-              <Link to='/register'>
+              <Link to="/register">
                 <Typography>New User ? Click To register</Typography>
               </Link>
             </>
