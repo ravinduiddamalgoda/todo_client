@@ -49,15 +49,15 @@ export function RegisterPage() {
   const makeRegistration = async (formData: any) => {
     try {
       const res = await axios.post('http://localhost:5000/register', {
-        ...formData
+        ...formData,
       });
       enqueueSnackbar('Succesfully Registered', { variant: 'success' });
       navigate('/login');
-    } catch(err: any) {
+    } catch (err: any) {
       const error = err?.response?.data?.err || err.message;
-      enqueueSnackbar(error, { variant: 'error' })
+      enqueueSnackbar(error, { variant: 'error' });
     }
-  }
+  };
 
   return (
     <Box className={classes.root}>
@@ -72,14 +72,16 @@ export function RegisterPage() {
           fname: Yup.string().required('Required*'),
           lname: Yup.string().required(),
           email: Yup.string().email('Provide an valid email').required(),
-          password: Yup.string().min(5, 'Password must have minimum 5 characters').required(),
+          password: Yup.string()
+            .min(5, 'Password must have minimum 5 characters')
+            .required(),
         })}
         onSubmit={makeRegistration}
       >
         {({ values, errors, handleChange, handleSubmit }) => {
           return (
             <>
-              <Typography variant='h3'>Registration</Typography>
+              <Typography variant="h3">Registration</Typography>
               <FormControl className={classes.formControl} variant="outlined">
                 <TextField
                   value={values.fname}
@@ -90,7 +92,9 @@ export function RegisterPage() {
                   size="small"
                   error={errors.fname && errors.fname?.length ? true : false}
                 />
-                <FormHelperText style={{ color: 'red' }}>{errors.fname}</FormHelperText>
+                <FormHelperText style={{ color: 'red' }}>
+                  {errors.fname}
+                </FormHelperText>
               </FormControl>
               <FormControl className={classes.formControl}>
                 <TextField
@@ -122,7 +126,9 @@ export function RegisterPage() {
                   size="small"
                   error={errors.email && errors.email?.length ? true : false}
                 />
-                <FormHelperText style={{ color: 'red' }}>{errors.email}</FormHelperText>
+                <FormHelperText style={{ color: 'red' }}>
+                  {errors.email}
+                </FormHelperText>
               </FormControl>
               <Button
                 onClick={() => handleSubmit()}
@@ -133,7 +139,7 @@ export function RegisterPage() {
                 Register
               </Button>
               <Box height={10}></Box>
-              <Link to='/login'>
+              <Link to="/login">
                 <Typography>Already Registered ? Click To login</Typography>
               </Link>
             </>

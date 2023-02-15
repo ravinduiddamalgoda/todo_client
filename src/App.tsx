@@ -22,7 +22,7 @@ function GuestRoutes() {
       <Routes>
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
-        <Route path="" element={<h1>Landing Page</h1>}/>
+        <Route path="" element={<h1>Landing Page</h1>} />
       </Routes>
     </GuestGuard>
   );
