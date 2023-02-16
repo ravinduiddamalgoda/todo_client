@@ -37,6 +37,7 @@ import { blue } from '@mui/material/colors';
 import Stack from '@mui/system/Stack';
 import { styled } from '@mui/styles';
 import clsx from 'clsx';
+import { alignProperty } from '@mui/material/styles/cssUtils';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: 'dark' ? '#1A2027' : '#fff',
@@ -66,7 +67,15 @@ const useStyles = makeStyles()(theme => ({
   root: {
     width: '80%',
     margin: '5% auto',
+    //background: '#1976D2'
   },
+
+  textEnter:{
+    maxWidth: '50%',
+    paddingLeft : '10%'
+   
+  },
+
   h1_wellcome: {
     fontSize: '20px',
     color: 'white',
@@ -78,19 +87,12 @@ const useStyles = makeStyles()(theme => ({
   },
   li_style: {
     listStyleType: 'none',
-    color: 'white',
+    color: 'Black',
   },
   button_col: {
-    color: 'white',
+    color: 'black',
     alignContent: 'flex-end',
     alignItems: 'end',
-  },
-  box_style: {
-    background: 'linear-gradient(45deg, #2193b0 30%, #6dd5ed 90%)',
-    boxShadow: '7px 10px 5px 0px rgba(102,174,237,1)',
-    width: '40%',
-    padding: '1%',
-    marginTop: '2%',
   },
   li_text: {
     paddingRight: '50%',
@@ -107,8 +109,9 @@ function TodoInput(props: { onNewTodoCreated: (todo: Todo) => void }) {
   const { client } = useContext(AuthContext);
   const { enqueueSnackbar } = useSnackbar();
   const [newTodo, setNewTodo] = useState('');
-
+  const styles = useStyles();
   async function createNewTodo() {
+    
     try {
       if (newTodo.length < 1) {
         return;
@@ -130,6 +133,7 @@ function TodoInput(props: { onNewTodoCreated: (todo: Todo) => void }) {
 
   return (
     <TextField
+      className={styles.classes.textEnter}
       value={newTodo}
       placeholder="Add new todo"
       style={{ width: '100%' }}
@@ -171,7 +175,6 @@ export function ProfilePage() {
     if (token) currentUser();
   }, [token]);
 
-  const pages = ['Todos'];
   const settings = ['Account', 'My Todos', 'Logout'];
 
   const logout = () => {
@@ -196,18 +199,23 @@ export function ProfilePage() {
 
   //todo content
   const [todos, setTodos] = useState<Todo[]>([]);
-
+  const [donetodo , setDonetodo] = useState<Todo[]>([]);
   useEffect(() => {
     async function init() {
       try {
         const res = await client?.get<Todo[]>('/todo');
         if (res?.data) {
-          setTodos(res?.data);
+          const dataCpy = res?.data;
+          const doneTodotemp = dataCpy.filter( item => item.status === "done");
+          const nonDone =  dataCpy.filter( item => item.status !== "done");
+          setDonetodo(doneTodotemp);
+          setTodos(nonDone);
         }
       } catch (err) {}
     }
     init();
   }, []);
+
 
   function Del_todo(tad: String, client: any) {
     const path_val = 'todo/' + tad;
@@ -220,8 +228,11 @@ export function ProfilePage() {
           const res = await client.delete(path_val);
 
           const todosCpy = [...todos];
+          const todoCpyDone = [...donetodo];
           const filteredTodos = todosCpy.filter(item => item._id !== tad);
+          const filterDone = todoCpyDone.filter(item => item._id !== tad);
           setTodos(filteredTodos);
+          setDonetodo(filterDone);
 
           enqueueSnackbar('Sucessfully Deleated', { variant: 'success' });
         }
@@ -233,8 +244,7 @@ export function ProfilePage() {
     Delete_val();
   }
 
-  const [edittodo, setEdittodo] = useState(null);
-
+  
   function edit_todo(todo_id: String, client: any) {
     const path_val = 'todo/' + todo_id;
     async function edit_val() {
@@ -242,6 +252,22 @@ export function ProfilePage() {
         if (client) {
           const res = await client.put(path_val, { status: 'done' });
           enqueueSnackbar('Sucessfully Edited', { variant: 'info' });
+          //console.log(res.data);
+          const prevData  = [...todos];
+          const prevEdit = [...donetodo];
+          const editDetail = prevData.filter( item => item._id === todo_id); 
+          const newNonDoneTodo = prevData.filter( item => item._id !== todo_id);
+          setTodos(newNonDoneTodo);
+          
+          //
+          
+
+          setDonetodo(prevEdit.concat(editDetail));
+          //setDonetodo(edit_detail)
+          //console.log(setDonetodo);
+          //prevData.push()
+          
+
           //window.location.reload();
         }
       } catch (err) {
@@ -288,7 +314,7 @@ export function ProfilePage() {
         />
         <ul>
           {todos.map(todo => (
-            <Box className={styles.classes.box_style}>
+            
               <li key={todo._id} className={styles.classes.li_style}>
                 <Typography
                   className={clsx(
@@ -323,7 +349,46 @@ export function ProfilePage() {
                   </Typography>
                 </Button>
               </li>
-            </Box>
+           
+          ))}
+        </ul>
+        <ul>
+          {donetodo.map(todo => (
+            
+              <li key={todo._id} className={styles.classes.li_style}>
+                <Typography
+                  className={clsx(
+                    styles.classes.li_text_done
+                  )}
+                  display="inline"
+                >
+                  {' '}
+                  {todo.title}
+                </Typography>
+                <Button
+                  className={styles.classes.button_col}
+                  onClick={() => {
+                    Del_todo(todo._id, client);
+                  }}
+                >
+                  {' '}
+                  <Typography display="inline">Delete</Typography>
+                </Button>
+                <Button
+                  className={styles.classes.button_col}
+                  onClick={() => {
+                    edit_todo(todo._id, client);
+                  }}
+                >
+                  <Typography
+                    className={styles.classes.button_at}
+                    display="inline"
+                  >
+                    Done
+                  </Typography>
+                </Button>
+              </li>
+           
           ))}
         </ul>
       </div>

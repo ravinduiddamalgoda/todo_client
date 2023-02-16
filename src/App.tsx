@@ -22,14 +22,14 @@ function GuestRoutes() {
       <Routes>
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
-        <Route path="" element={<h1>Landing Page</h1>} />
+        <Route path="/" element={<LoginPage />} />
       </Routes>
     </GuestGuard>
   );
 }
 
 function App() {
-  const [count, setCount] = useState(0);
+  
 
   return (
     <Routes>
