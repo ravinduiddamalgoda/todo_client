@@ -13,7 +13,7 @@ import {
   Tooltip,
   MenuItem,
   Menu,
-  Paper,
+  Paper
 } from '@mui/material';
 import { useNavigate } from 'react-router';
 import TabUnstyled from '@mui/base/TabUnstyled';
@@ -23,11 +23,6 @@ import MenuUnstyled from '@mui/base/MenuUnstyled';
 import MenuItemUnstyled from '@mui/base/MenuItemUnstyled';
 import TabsUnstyled from '@mui/base/TabsUnstyled';
 import axios, { AxiosPromise } from 'axios';
-import { AddToQueue, Route } from '@mui/icons-material';
-import { Routes } from 'react-router-dom';
-import React from 'react';
-import MenuIcon from '@mui/icons-material/Menu';
-import AdbIcon from '@mui/icons-material/Adb';
 import { boolean } from 'yup';
 import { useSnackbar } from 'notistack';
 import { useContext, useEffect, useState } from 'react';
@@ -38,6 +33,9 @@ import Stack from '@mui/system/Stack';
 import { styled } from '@mui/styles';
 import clsx from 'clsx';
 import { alignProperty } from '@mui/material/styles/cssUtils';
+import { borders } from '@mui/system';
+
+
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: 'dark' ? '#1A2027' : '#fff',
@@ -70,10 +68,10 @@ const useStyles = makeStyles()(theme => ({
     //background: '#1976D2'
   },
 
-  textEnter:{
+  textEnter: {
     maxWidth: '50%',
-    paddingLeft : '10%'
-   
+    paddingLeft: '26%',
+    paddingright: '20%'
   },
 
   h1_wellcome: {
@@ -86,23 +84,62 @@ const useStyles = makeStyles()(theme => ({
     textAlign: 'center',
   },
   li_style: {
+    borderLeft: 1 ,
+    borderWidth: '10px',
+    //borderLeftColor: "#3C5186" ,
+    borderColor: '#3C5186',
+    borderRadius: '6px',
     listStyleType: 'none',
+    background : 'rgb(25,103,210,0.3)',
     color: 'Black',
+    margin:'14px',
+    width: '70%',
+    //border : 
+    
+   
   },
   button_col: {
+    fontSize: '12px',
     color: 'black',
     alignContent: 'flex-end',
     alignItems: 'end',
+    ":hover": {
+      backgroundColor: 'rgb(25,118,210, 0.5)',
+      color: 'white'
+    }
+    
   },
+  btnBox :{
+   paddingLeft: '7%'
+
+  },
+
   li_text: {
+    fontFamily: '"Segoe UI"',
     paddingRight: '50%',
+    paddingLeft: '2%',
+    fontSize : '20px',
+    fontWeight: '700'
   },
   li_text_done: {
+    fontFamily: '"Segoe UI"',
+    paddingRight: '50%',
     textDecoration: 'line-through',
+    paddingLeft: '2%',
+    fontSize : '20px',
+    fontWeight: '700'
   },
   button_at: {
     color: 'black',
+    
   },
+
+  liBox: {
+    paddingLeft: '22%',
+    paddingRight : '10%',
+    
+    width : '80%'
+  }
 }));
 
 function TodoInput(props: { onNewTodoCreated: (todo: Todo) => void }) {
@@ -111,7 +148,6 @@ function TodoInput(props: { onNewTodoCreated: (todo: Todo) => void }) {
   const [newTodo, setNewTodo] = useState('');
   const styles = useStyles();
   async function createNewTodo() {
-    
     try {
       if (newTodo.length < 1) {
         return;
@@ -151,6 +187,9 @@ function TodoInput(props: { onNewTodoCreated: (todo: Todo) => void }) {
 var res_data: String;
 
 export function ProfilePage() {
+
+
+  
   const { client } = useContext(AuthContext);
   const token = useContext(AuthContext);
   const styles = useStyles();
@@ -199,15 +238,15 @@ export function ProfilePage() {
 
   //todo content
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [donetodo , setDonetodo] = useState<Todo[]>([]);
+  const [donetodo, setDonetodo] = useState<Todo[]>([]);
   useEffect(() => {
     async function init() {
       try {
         const res = await client?.get<Todo[]>('/todo');
         if (res?.data) {
           const dataCpy = res?.data;
-          const doneTodotemp = dataCpy.filter( item => item.status === "done");
-          const nonDone =  dataCpy.filter( item => item.status !== "done");
+          const doneTodotemp = dataCpy.filter(item => item.status === 'done');
+          const nonDone = dataCpy.filter(item => item.status !== 'done');
           setDonetodo(doneTodotemp);
           setTodos(nonDone);
         }
@@ -215,7 +254,6 @@ export function ProfilePage() {
     }
     init();
   }, []);
-
 
   function Del_todo(tad: String, client: any) {
     const path_val = 'todo/' + tad;
@@ -244,7 +282,6 @@ export function ProfilePage() {
     Delete_val();
   }
 
-  
   function edit_todo(todo_id: String, client: any) {
     const path_val = 'todo/' + todo_id;
     async function edit_val() {
@@ -253,20 +290,18 @@ export function ProfilePage() {
           const res = await client.put(path_val, { status: 'done' });
           enqueueSnackbar('Sucessfully Edited', { variant: 'info' });
           //console.log(res.data);
-          const prevData  = [...todos];
+          const prevData = [...todos];
           const prevEdit = [...donetodo];
-          const editDetail = prevData.filter( item => item._id === todo_id); 
-          const newNonDoneTodo = prevData.filter( item => item._id !== todo_id);
+          const editDetail = prevData.filter(item => item._id === todo_id);
+          const newNonDoneTodo = prevData.filter(item => item._id !== todo_id);
           setTodos(newNonDoneTodo);
-          
+
           //
-          
 
           setDonetodo(prevEdit.concat(editDetail));
           //setDonetodo(edit_detail)
           //console.log(setDonetodo);
           //prevData.push()
-          
 
           //window.location.reload();
         }
@@ -278,10 +313,14 @@ export function ProfilePage() {
     edit_val();
   }
 
+
+
+
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
+        <AppBar position="static" sx = {{background: "linear-gradient(118deg, rgba(65,112,180,1) 17%, rgba(130,74,175,1) 96%)"}}>
           <Toolbar>
             <IconButton
               size="large"
@@ -314,81 +353,79 @@ export function ProfilePage() {
         />
         <ul>
           {todos.map(todo => (
-            
-              <li key={todo._id} className={styles.classes.li_style}>
-                <Typography
-                  className={clsx(
-                    styles.classes.li_text,
-                    todo.status === 'done' && styles.classes.li_text_done
-                  )}
-                  display="inline"
-                >
-                  {' '}
-                  {todo.title}
-                </Typography>
-                <Button
-                  className={styles.classes.button_col}
-                  onClick={() => {
-                    Del_todo(todo._id, client);
-                  }}
-                >
-                  {' '}
-                  <Typography display="inline">Delete</Typography>
-                </Button>
-                <Button
-                  className={styles.classes.button_col}
-                  onClick={() => {
-                    edit_todo(todo._id, client);
-                  }}
-                >
-                  <Typography
-                    className={styles.classes.button_at}
-                    display="inline"
-                  >
-                    Done
-                  </Typography>
-                </Button>
-              </li>
-           
+            <div className ={styles.classes.liBox}>
+            <li key={todo._id} className={styles.classes.li_style}>
+              <Typography
+                className={clsx(
+                  styles.classes.li_text,
+                  todo.status === 'done' && styles.classes.li_text_done
+                )}
+                display="inline"
+              >
+                {' '}
+                {todo.title}
+              </Typography>
+              <Box className={styles.classes.btnBox}>
+              <Button
+                className={styles.classes.button_col}
+                onClick={() => {
+                  Del_todo(todo._id, client);
+                }}
+              >
+               
+                Delete
+              </Button>
+              <Button
+                className={styles.classes.button_col}
+                onClick={() => {
+                  edit_todo(todo._id, client);
+                }}
+              >
+                
+                Done
+                
+              </Button>
+
+              </Box>
+              
+            </li>
+            </div>
           ))}
         </ul>
         <ul>
           {donetodo.map(todo => (
-            
+            <Box className ={styles.classes.liBox}>
               <li key={todo._id} className={styles.classes.li_style}>
-                <Typography
-                  className={clsx(
-                    styles.classes.li_text_done
-                  )}
-                  display="inline"
-                >
-                  {' '}
-                  {todo.title}
-                </Typography>
-                <Button
-                  className={styles.classes.button_col}
-                  onClick={() => {
-                    Del_todo(todo._id, client);
-                  }}
-                >
-                  {' '}
-                  <Typography display="inline">Delete</Typography>
-                </Button>
-                <Button
-                  className={styles.classes.button_col}
-                  onClick={() => {
-                    edit_todo(todo._id, client);
-                  }}
-                >
-                  <Typography
-                    className={styles.classes.button_at}
-                    display="inline"
-                  >
-                    Done
-                  </Typography>
-                </Button>
-              </li>
-           
+              <Typography
+                className={clsx(styles.classes.li_text_done)}
+                display="inline"
+              >
+                {' '}
+                {todo.title}
+              </Typography>
+              <Box className={styles.classes.btnBox}>
+              <Button
+                className={styles.classes.button_col}
+                onClick={() => {
+                  Del_todo(todo._id, client);
+                }}
+              >
+                {' '}
+                Delete
+              </Button>
+              <Button
+                className={styles.classes.button_col}
+                onClick={() => {
+                  edit_todo(todo._id, client);
+                }}
+              >
+               
+                  Done
+                
+              </Button>
+              </Box>
+            </li>
+            </Box>
           ))}
         </ul>
       </div>

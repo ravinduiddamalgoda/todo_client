@@ -8,6 +8,7 @@ import {
   Input,
   TextField,
   Typography,
+  Container
 } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 import { Formik } from 'formik';
@@ -37,17 +38,47 @@ const useStyles = makeStyles()(theme => ({
     [theme.breakpoints.down('sm')]: {
       width: '95%',
     },
-    margin: '0 auto',
-    height: '100vh',
+    marginTop: '7%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginBottom: '5%',
+    height: '60vh',
     display: 'flex',
     flexDirection: 'column',
+    paddingTop:'2%',
+    paddingBottom: '0',
+    borderColor: 'black',
+    background: "white",
+    borderRadius: '6px',
+    borderBlockWidth :'thick'
+  
   },
+  loginPage: {
+    paddingTop:'1%',
+    maxWidth:'100%',
+    maxHeight: '100%',
+    paddingBottom: '4%',
+    //background: rgb(65,112,180);
+    background: 'linear-gradient(71deg, rgba(65,112,180,0.8829656862745098) 0%, rgba(130,74,175,0.9277836134453782) 72%)'
+    //background
+   
+
+  },
+
   formControl: {
     marginTop: '10px',
+    padding: '3%'
   },
   submitBtn: {
     marginTop: '15px',
+    marginLeft : '5%',
+    marginRight : '5%'
   },
+  login: {
+    fontFamily: '"Segoe UI"',
+    paddingLeft: '28%'
+
+  }
 }));
 
 export function LoginPage() {
@@ -77,62 +108,64 @@ export function LoginPage() {
   };
 
   return (
-    <Box className={classes.root}>
-      <Formik
-        initialValues={{
-          email: '',
-          password: '',
-        }}
-        validationSchema={Yup.object().shape({
-          email: Yup.string().email('Provide an valid email').required(),
-          password: Yup.string().required(),
-        })}
-        onSubmit={makeRegistration}
-      >
-        {({ values, errors, handleChange, handleSubmit }) => {
-          return (
-            <>
-              <Typography variant="h3">Login</Typography>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  value={values.email}
-                  onChange={handleChange}
-                  name="email"
-                  label="Email"
-                  type="email"
-                  size="small"
-                  error={errors.email && errors.email?.length ? true : false}
-                />
-                <FormHelperText style={{ color: 'red' }}>
-                  {errors.email}
-                </FormHelperText>
-              </FormControl>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  value={values.password}
-                  onChange={handleChange}
-                  name="password"
-                  label="Password"
-                  type="password"
-                  size="small"
-                />
-              </FormControl>
-              <Button
-                onClick={() => handleSubmit()}
-                type="submit"
-                className={classes.submitBtn}
-                variant="contained"
-              >
-                Login
-              </Button>
-              <Box height={10} />
-              <Link to="/register">
-                <Typography>New User ? Click To register</Typography>
-              </Link>
-            </>
-          );
-        }}
-      </Formik>
-    </Box>
+    <Container className={classes.loginPage}>
+      <Box className={classes.root}>
+        <Formik
+          initialValues={{
+            email: '',
+            password: '',
+          }}
+          validationSchema={Yup.object().shape({
+            email: Yup.string().email('Provide an valid email').required(),
+            password: Yup.string().required(),
+          })}
+          onSubmit={makeRegistration}
+        >
+          {({ values, errors, handleChange, handleSubmit }) => {
+            return (
+              <>
+                <Typography variant="h3" className={classes.login} >Login</Typography>
+                <FormControl className={classes.formControl}>
+                  <TextField
+                    value={values.email}
+                    onChange={handleChange}
+                    name="email"
+                    label="Email"
+                    type="email"
+                    size="small"
+                    error={errors.email && errors.email?.length ? true : false}
+                  />
+                  <FormHelperText style={{ color: 'red' }}>
+                    {errors.email}
+                  </FormHelperText>
+                </FormControl>
+                <FormControl className={classes.formControl}>
+                  <TextField
+                    value={values.password}
+                    onChange={handleChange}
+                    name="password"
+                    label="Password"
+                    type="password"
+                    size="small"
+                  />
+                </FormControl>
+                <Button
+                  onClick={() => handleSubmit()}
+                  type="submit"
+                  className={classes.submitBtn}
+                  variant="contained"
+                >
+                  Login
+                </Button>
+                <Box height={10} />
+                <Link to="/register">
+                  <Typography sx ={{paddingLeft:'15%' , color: '#2691D9' , textDecoration: 'none'}}>New User ? Click To register</Typography>
+                </Link>
+              </>
+            );
+          }}
+        </Formik>
+      </Box>
+    </Container>
   );
 }
