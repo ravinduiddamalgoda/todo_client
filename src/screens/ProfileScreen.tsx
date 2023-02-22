@@ -62,19 +62,37 @@ export interface Todo {
 }
 
 const useStyles = makeStyles()(theme => ({
+
+  backGroundAll : {
+
+    backgroundColor : 'black',
+
+  },
+  
   root: {
-    width: '80%',
+    [theme.breakpoints.up('md')]: {
+      width: '55%',
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '70%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '95%',
+    },
     margin: '5% auto',
     //background: '#1976D2'
   },
 
+
   textEnter: {
-    maxWidth: '50%',
-    paddingLeft: '26%',
-    paddingright: '20%'
+    width: '100%',
+   ":Mui-focused":{
+      border: 'none',
+      borderColor: 'rgb(25,103,210,0.3)',
+   }
   },
 
-  h1_wellcome: {
+    h1_wellcome: {
     fontSize: '20px',
     color: 'white',
     paddingRight: '40%',
@@ -84,49 +102,72 @@ const useStyles = makeStyles()(theme => ({
     textAlign: 'center',
   },
   li_style: {
-    borderLeft: 1 ,
-    borderWidth: '10px',
-    //borderLeftColor: "#3C5186" ,
-    borderColor: '#3C5186',
-    borderRadius: '6px',
     listStyleType: 'none',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    borderLeft: 'solid',
+    borderLeftColor: '#824AAF',
+    borderLeftWidth: '3px',
     //background : 'rgb(25,103,210,0.3)',
     color: 'Black',
-    margin:'14px',
-    width: '70%',
+    //margin:'5%',
+    width: '100%',
+    marginTop: '1.5%' 
     //height: '30vh',
     //border : 
     
    
   },
   button_col: {
+    
+    marginRight: '5px',
+    
     fontSize: '12px',
     color: 'black',
     alignContent: 'flex-end',
     alignItems: 'end',
     ":hover": {
-      backgroundColor: 'rgb(25,118,210, 0.5)',
+      backgroundColor: 'rgb(130, 74, 175 , 0.7)',
       color: 'white'
     }
     
   },
+  button_colSave:{
+    marginRight: '5px',
+    
+   
+    fontSize: '12px',
+    color: 'black',
+    alignContent: 'flex-end',
+    alignItems: 'end',
+    ":hover": {
+      backgroundColor: 'rgb(130, 74, 175 , 0.7)',
+      color: 'white'
+    },
+    flex:1
+    
+    
+
+  },
+
   btnBox :{
-   paddingLeft: '70%',
-   paddingTop : '8%'
+   display: 'flex',
+   justifyContent: 'flex-end',
+   alignItems: 'end',
+   height: '50%',
+   marginRight: '12px'
   },
 
   li_text: {
+    paddingTop: '6px',
     fontFamily: '"Segoe UI"',
-    paddingRight: '40%',
-    paddingLeft: '2%',
+    flex: 1,
     fontSize : '20px',
     fontWeight: '700'
   },
   li_text_done: {
     fontFamily: '"Segoe UI"',
-    paddingRight: '50%',
     textDecoration: 'line-through',
-    paddingLeft: '2%',
     fontSize : '20px',
     fontWeight: '700'
   },
@@ -135,40 +176,29 @@ const useStyles = makeStyles()(theme => ({
     
   },
 
-  liBox: {
-    paddingLeft: '22%',
-    paddingRight : '10%',
-    
-    width : '80%'
-  },
-  liBoxSize: {
-    paddingLeft: '22%',
-    paddingRight : '10%',
-    
-    width : '80%'
-  },
-
   liBoxLarge: {
-    borderLeft: 1 ,
-    borderWidth: '10px',
+    border: 'solid',
+    borderWidth: '2px',
     //borderLeftColor: "#3C5186" ,
-    borderColor: '#3C5186',
+    borderColor: '#824AAF',
     borderRadius: '6px',
     listStyleType: 'none',
-    background : 'rgb(25,103,210,0.3)',
+    background : 'white',
     color: 'Black',
-    margin:'14px',
-    width: '70%',
-    height: '30vh',
+    marginTop: '3%',
+    //margin:'14px',
+    width: '100%',
+    height: '20vh',
     
 
   },
 
   inputText: {
+    paddingTop: '2%',
+    paddingLeft: '5%',
     width: '80%',
     border: "none",
-    margin: "none",
-  
+    margin: 'dense',
   } ,
   
   arrowStyle: {
@@ -183,16 +213,17 @@ const useStyles = makeStyles()(theme => ({
     }
   },
   arrowStyleSmall: {
-    fontSize : '150',
     marginLeft: "2%",
-    paddingLeft: '3%',
+    paddingLeft: '3.5%',
     paddingTop: "2%",
     color: '#7F4BAF',
     ":hover": {
       backgroundColor: 'rgb(107, 87, 176)',
-      color: 'white'
+      color: 'white',
+     
     },
-    alignSelf: 'end'
+    paddingRight: '2%',
+    marginBottom: '2px'
   }
 
 }));
@@ -273,6 +304,8 @@ function TodoEditName(props: {tId:String , tName:String} ){
         className= {styles.classes.inputText}
         value = {val}
         onChange={e => setVal(e.target.value)}
+        variant="standard"
+        color="secondary"
         onKeyUp={e => {
           if (e.keyCode === 13) {
             setNewTodoName();
@@ -446,11 +479,11 @@ export function ProfilePage() {
     };
 
 
-    if(card === false ){
+    if(!card ){
       
     return (
       <>
-       <Box className ={styles.classes.liBox}>
+      
             
             <Box key={props.todoData._id} className={styles.classes.li_style}>
             <Checkbox checked={checked} onChange={() => handleChange(props.todoData._id)}/>
@@ -465,25 +498,30 @@ export function ProfilePage() {
                 {' '}
                 {props.todoData.title}
               </Typography>
-              <Button startIcon= {<KeyboardDoubleArrowUpIcon/>} className= {styles.classes.arrowStyleSmall} onClick = {() => setCard(!card)}></Button>
+              <Button startIcon= {<ArrowDownwardIcon/>} className= {styles.classes.arrowStyleSmall} onClick = {() => setCard(!card)}></Button>
+              </Box>
               
-            </Box>
-            </Box>
+              
+              
+           
+            
       
       </>
 
     );
     }
-    else{
+    
       return (
         <>
-        <Box className ={styles.classes.liBoxSize}>
+       
           
           <Box key={props.todoData._id} className={styles.classes. liBoxLarge}>
             <TodoEditName tId = { props.todoData._id } tName = {props.todoData.title} />
             {/* <ArrowDownwardIcon className= {styles.classes.arrowStyle} onClick = {() => {alert("clicked")}}/> */}
-            <Button startIcon= {<KeyboardDoubleArrowUpIcon/>} className= {styles.classes.arrowStyle} onClick = {() => setCard(!card)}></Button>
+            {/* <Button startIcon= {<KeyboardDoubleArrowUpIcon/>} className= {styles.classes.arrowStyle} onClick = {() => setCard(!card)}></Button> */}
             <Box className={styles.classes.btnBox}>
+
+            
             
             <Button
               className={styles.classes.button_col}
@@ -497,9 +535,7 @@ export function ProfilePage() {
 
             <Button
               className={styles.classes.button_col}
-              onClick={() => {
-                Del_todo(props.todoData._id, client);
-              }}
+              onClick = {() => setCard(!card)}
             >
              
               Cancel
@@ -508,12 +544,12 @@ export function ProfilePage() {
             </Box>
             
           </Box>
-          </Box>
+          
         
          </>
     );
 
-    }
+    
 
      
 
@@ -524,7 +560,7 @@ export function ProfilePage() {
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" sx = {{background: "linear-gradient(118deg, rgba(65,112,180,1) 17%, rgba(130,74,175,1) 96%)"}}>
+        <AppBar position="static" sx = {{background: "rgba(130,74,175,1)" , display: 'flex'}}>
           <Toolbar>
             <IconButton
               size="large"
@@ -551,18 +587,24 @@ export function ProfilePage() {
           </Toolbar>
         </AppBar>
       </Box>
-      <div className={styles.classes.root}>
-        <TodoInput
-          onNewTodoCreated={todo => setTodos(current => [...current, todo])}
-        />
-         
-          {todos.map(todo => (
+      <div >
+        <div className={clsx(
+                    styles.classes.root 
+                  )}>
+          <TodoInput
+            onNewTodoCreated={todo => setTodos(current => [...current, todo])}
+          />
+          
+            {todos.map(todo => (
 
-            <TodoCard todoData={todo}/>
-            
-          ))}
-        
+              <TodoCard todoData={todo}/>
+              
+            ))}
+          
+        </div>
+
       </div>
+      
     </>
   );
 }
