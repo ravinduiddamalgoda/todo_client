@@ -1,4 +1,4 @@
-import { Label, Margin } from '@mui/icons-material';
+import { CheckBox, Height, Label, Margin } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -34,9 +34,9 @@ import { styled } from '@mui/styles';
 import clsx from 'clsx';
 import { alignProperty } from '@mui/material/styles/cssUtils';
 import { borders } from '@mui/system';
-
-
-
+import Checkbox from '@mui/material/Checkbox';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: 'dark' ? '#1A2027' : '#fff',
   padding: '2px',
@@ -62,19 +62,37 @@ export interface Todo {
 }
 
 const useStyles = makeStyles()(theme => ({
+
+  backGroundAll : {
+
+    backgroundColor : 'black',
+
+  },
+  
   root: {
-    width: '80%',
+    [theme.breakpoints.up('md')]: {
+      width: '55%',
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '70%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '95%',
+    },
     margin: '5% auto',
     //background: '#1976D2'
   },
 
+
   textEnter: {
-    maxWidth: '50%',
-    paddingLeft: '26%',
-    paddingright: '20%'
+    width: '100%',
+   ":Mui-focused":{
+      border: 'none',
+      borderColor: 'rgb(25,103,210,0.3)',
+   }
   },
 
-  h1_wellcome: {
+    h1_wellcome: {
     fontSize: '20px',
     color: 'white',
     paddingRight: '40%',
@@ -84,48 +102,72 @@ const useStyles = makeStyles()(theme => ({
     textAlign: 'center',
   },
   li_style: {
-    borderLeft: 1 ,
-    borderWidth: '10px',
-    //borderLeftColor: "#3C5186" ,
-    borderColor: '#3C5186',
-    borderRadius: '6px',
     listStyleType: 'none',
-    background : 'rgb(25,103,210,0.3)',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    borderLeft: 'solid',
+    borderLeftColor: '#824AAF',
+    borderLeftWidth: '3px',
+    //background : 'rgb(25,103,210,0.3)',
     color: 'Black',
-    margin:'14px',
-    width: '70%',
+    //margin:'5%',
+    width: '100%',
+    marginTop: '1.5%' 
+    //height: '30vh',
     //border : 
     
    
   },
   button_col: {
+    
+    marginRight: '5px',
+    
     fontSize: '12px',
     color: 'black',
     alignContent: 'flex-end',
     alignItems: 'end',
     ":hover": {
-      backgroundColor: 'rgb(25,118,210, 0.5)',
+      backgroundColor: 'rgb(130, 74, 175 , 0.7)',
       color: 'white'
     }
     
   },
-  btnBox :{
-   paddingLeft: '7%'
+  button_colSave:{
+    marginRight: '5px',
+    
+   
+    fontSize: '12px',
+    color: 'black',
+    alignContent: 'flex-end',
+    alignItems: 'end',
+    ":hover": {
+      backgroundColor: 'rgb(130, 74, 175 , 0.7)',
+      color: 'white'
+    },
+    flex:1
+    
+    
 
   },
 
+  btnBox :{
+   display: 'flex',
+   justifyContent: 'flex-end',
+   alignItems: 'end',
+   height: '50%',
+   marginRight: '12px'
+  },
+
   li_text: {
+    paddingTop: '6px',
     fontFamily: '"Segoe UI"',
-    paddingRight: '50%',
-    paddingLeft: '2%',
+    flex: 1,
     fontSize : '20px',
     fontWeight: '700'
   },
   li_text_done: {
     fontFamily: '"Segoe UI"',
-    paddingRight: '50%',
     textDecoration: 'line-through',
-    paddingLeft: '2%',
     fontSize : '20px',
     fontWeight: '700'
   },
@@ -134,12 +176,56 @@ const useStyles = makeStyles()(theme => ({
     
   },
 
-  liBox: {
-    paddingLeft: '22%',
-    paddingRight : '10%',
+  liBoxLarge: {
+    border: 'solid',
+    borderWidth: '2px',
+    //borderLeftColor: "#3C5186" ,
+    borderColor: '#824AAF',
+    borderRadius: '6px',
+    listStyleType: 'none',
+    background : 'white',
+    color: 'Black',
+    marginTop: '3%',
+    //margin:'14px',
+    width: '100%',
+    height: '20vh',
     
-    width : '80%'
+
+  },
+
+  inputText: {
+    paddingTop: '2%',
+    paddingLeft: '5%',
+    width: '80%',
+    border: "none",
+    margin: 'dense',
+  } ,
+  
+  arrowStyle: {
+    fontSize : '150',
+    marginLeft: "2%",
+    paddingLeft: '3%',
+    paddingTop: "2%",
+    color: '#7F4BAF',
+    ":hover": {
+      backgroundColor: 'rgb(107, 87, 176)',
+      color: 'white'
+    }
+  },
+  arrowStyleSmall: {
+    marginLeft: "2%",
+    paddingLeft: '3.5%',
+    paddingTop: "2%",
+    color: '#7F4BAF',
+    ":hover": {
+      backgroundColor: 'rgb(107, 87, 176)',
+      color: 'white',
+     
+    },
+    paddingRight: '2%',
+    marginBottom: '2px'
   }
+
 }));
 
 function TodoInput(props: { onNewTodoCreated: (todo: Todo) => void }) {
@@ -172,7 +258,7 @@ function TodoInput(props: { onNewTodoCreated: (todo: Todo) => void }) {
       className={styles.classes.textEnter}
       value={newTodo}
       placeholder="Add new todo"
-      style={{ width: '100%' }}
+      style={{ width: '100%' , borderStyle: 'hidden' }}
       size="small"
       onChange={e => setNewTodo(e.target.value)}
       onKeyUp={e => {
@@ -185,6 +271,58 @@ function TodoInput(props: { onNewTodoCreated: (todo: Todo) => void }) {
 }
 
 var res_data: String;
+
+function TodoEditName(props: {tId:String , tName:String} ){
+  const { client } = useContext(AuthContext);
+  const styles = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const[val,setVal] = useState(props.tName);
+
+  const path = 'todo/' + props.tId;
+  async function setNewTodoName(){
+    try{
+      if (val.length < 1) {
+        return;
+      }
+      if (client) {
+        const res = await client.put(path, { title: val });
+        enqueueSnackbar('Sucessfully Edited', { variant: 'success' });
+      }
+
+    }
+    catch(err){
+
+      enqueueSnackbar('Something went wrong', { variant: 'error' });
+    }
+}
+
+
+  return(
+    <>
+      <TextField
+        className= {styles.classes.inputText}
+        value = {val}
+        onChange={e => setVal(e.target.value)}
+        variant="standard"
+        color="secondary"
+        onKeyUp={e => {
+          if (e.keyCode === 13) {
+            setNewTodoName();
+          }
+        }}
+        />
+    
+    </>
+
+  );
+
+
+
+}
+
+
+
 
 export function ProfilePage() {
 
@@ -245,10 +383,10 @@ export function ProfilePage() {
         const res = await client?.get<Todo[]>('/todo');
         if (res?.data) {
           const dataCpy = res?.data;
-          const doneTodotemp = dataCpy.filter(item => item.status === 'done');
-          const nonDone = dataCpy.filter(item => item.status !== 'done');
-          setDonetodo(doneTodotemp);
-          setTodos(nonDone);
+          //const doneTodotemp = dataCpy.filter(item => item.status === 'done');
+          //const nonDone = dataCpy.filter(item => item.status !== 'done');
+          //setDonetodo(doneTodotemp);
+          setTodos(dataCpy);
         }
       } catch (err) {}
     }
@@ -266,11 +404,11 @@ export function ProfilePage() {
           const res = await client.delete(path_val);
 
           const todosCpy = [...todos];
-          const todoCpyDone = [...donetodo];
+          //const todoCpyDone = [...donetodo];
           const filteredTodos = todosCpy.filter(item => item._id !== tad);
-          const filterDone = todoCpyDone.filter(item => item._id !== tad);
+          //const filterDone = todoCpyDone.filter(item => item._id !== tad);
           setTodos(filteredTodos);
-          setDonetodo(filterDone);
+          //setDonetodo(filterDone);
 
           enqueueSnackbar('Sucessfully Deleated', { variant: 'success' });
         }
@@ -282,23 +420,25 @@ export function ProfilePage() {
     Delete_val();
   }
 
-  function edit_todo(todo_id: String, client: any) {
+
+  //var stat:String = "pending"; 
+  function edit_todo(todo_id: String, client: any , stat:String) {
     const path_val = 'todo/' + todo_id;
     async function edit_val() {
       try {
         if (client) {
-          const res = await client.put(path_val, { status: 'done' });
+          const res = await client.put(path_val, { status: stat });
           enqueueSnackbar('Sucessfully Edited', { variant: 'info' });
-          //console.log(res.data);
-          const prevData = [...todos];
-          const prevEdit = [...donetodo];
-          const editDetail = prevData.filter(item => item._id === todo_id);
-          const newNonDoneTodo = prevData.filter(item => item._id !== todo_id);
-          setTodos(newNonDoneTodo);
+          console.log(stat);
+          //const prevData = [...todos];
+          //const prevEdit = [...donetodo];
+          //const editDetail = prevData.filter(item => item._id === todo_id);
+          //const newNonDoneTodo = prevData.filter(item => item._id !== todo_id);
+          //setTodos(newNonDoneTodo);
 
           //
 
-          setDonetodo(prevEdit.concat(editDetail));
+          //setDonetodo(prevEdit.concat(editDetail));
           //setDonetodo(edit_detail)
           //console.log(setDonetodo);
           //prevData.push()
@@ -313,14 +453,114 @@ export function ProfilePage() {
     edit_val();
   }
 
+  
 
 
+  //const [todoCard , setTodoCard] = useState(1);
+  
+  function TodoCard(props: { todoData : Todo}){
+    
+    //const tempCard = false;
+    const [card , setCard] = useState(false);
+    //const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+    const [checked, setChecked] = useState(false);
+    const handleChange = (id:String) => {
+      setChecked(!checked)
+      var statTemp:String;
+      if(checked === false)
+        statTemp = "done";
+      else
+      statTemp = "pending";
+     
+     
+
+        edit_todo(id, client , statTemp);
+
+    };
 
 
+    if(!card ){
+      
+    return (
+      <>
+      
+            
+            <Box key={props.todoData._id} className={styles.classes.li_style}>
+            <Checkbox checked={checked} onChange={() => handleChange(props.todoData._id)}/>
+            
+              <Typography
+                className={clsx(
+                  styles.classes.li_text,
+                  checked == true && styles.classes.li_text_done
+                )}
+                display="inline"
+              >
+                {' '}
+                {props.todoData.title}
+              </Typography>
+              <Button startIcon= {<ArrowDownwardIcon/>} className= {styles.classes.arrowStyleSmall} onClick = {() => setCard(!card)}></Button>
+              </Box>
+              
+              
+              
+           
+            
+      
+      </>
+
+    );
+    }
+    
+      return (
+        <>
+       
+          
+          <Box key={props.todoData._id} className={styles.classes. liBoxLarge}>
+            <TodoEditName tId = { props.todoData._id } tName = {props.todoData.title} />
+            {/* <ArrowDownwardIcon className= {styles.classes.arrowStyle} onClick = {() => {alert("clicked")}}/> */}
+            {/* <Button startIcon= {<KeyboardDoubleArrowUpIcon/>} className= {styles.classes.arrowStyle} onClick = {() => setCard(!card)}></Button> */}
+            <Box className={styles.classes.btnBox}>
+
+            
+            
+            <Button
+              className={styles.classes.button_col}
+              onClick={() => {
+                Del_todo(props.todoData._id, client);
+              }}
+            >
+             
+              Delete
+            </Button>
+
+            <Button
+              className={styles.classes.button_col}
+              onClick = {() => setCard(!card)}
+            >
+             
+              Cancel
+            </Button>
+
+            </Box>
+            
+          </Box>
+          
+        
+         </>
+    );
+
+    
+
+     
+
+
+  }
+
+ 
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" sx = {{background: "linear-gradient(118deg, rgba(65,112,180,1) 17%, rgba(130,74,175,1) 96%)"}}>
+        <AppBar position="static" sx = {{background: "rgba(130,74,175,1)" , display: 'flex'}}>
           <Toolbar>
             <IconButton
               size="large"
@@ -347,88 +587,24 @@ export function ProfilePage() {
           </Toolbar>
         </AppBar>
       </Box>
-      <div className={styles.classes.root}>
-        <TodoInput
-          onNewTodoCreated={todo => setTodos(current => [...current, todo])}
-        />
-        <ul>
-          {todos.map(todo => (
-            <div className ={styles.classes.liBox}>
-            <li key={todo._id} className={styles.classes.li_style}>
-              <Typography
-                className={clsx(
-                  styles.classes.li_text,
-                  todo.status === 'done' && styles.classes.li_text_done
-                )}
-                display="inline"
-              >
-                {' '}
-                {todo.title}
-              </Typography>
-              <Box className={styles.classes.btnBox}>
-              <Button
-                className={styles.classes.button_col}
-                onClick={() => {
-                  Del_todo(todo._id, client);
-                }}
-              >
-               
-                Delete
-              </Button>
-              <Button
-                className={styles.classes.button_col}
-                onClick={() => {
-                  edit_todo(todo._id, client);
-                }}
-              >
-                
-                Done
-                
-              </Button>
+      <div >
+        <div className={clsx(
+                    styles.classes.root 
+                  )}>
+          <TodoInput
+            onNewTodoCreated={todo => setTodos(current => [...current, todo])}
+          />
+          
+            {todos.map(todo => (
 
-              </Box>
+              <TodoCard todoData={todo}/>
               
-            </li>
-            </div>
-          ))}
-        </ul>
-        <ul>
-          {donetodo.map(todo => (
-            <Box className ={styles.classes.liBox}>
-              <li key={todo._id} className={styles.classes.li_style}>
-              <Typography
-                className={clsx(styles.classes.li_text_done)}
-                display="inline"
-              >
-                {' '}
-                {todo.title}
-              </Typography>
-              <Box className={styles.classes.btnBox}>
-              <Button
-                className={styles.classes.button_col}
-                onClick={() => {
-                  Del_todo(todo._id, client);
-                }}
-              >
-                {' '}
-                Delete
-              </Button>
-              <Button
-                className={styles.classes.button_col}
-                onClick={() => {
-                  edit_todo(todo._id, client);
-                }}
-              >
-               
-                  Done
-                
-              </Button>
-              </Box>
-            </li>
-            </Box>
-          ))}
-        </ul>
+            ))}
+          
+        </div>
+
       </div>
+      
     </>
   );
 }
